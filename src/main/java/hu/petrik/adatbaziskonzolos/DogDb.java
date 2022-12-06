@@ -14,9 +14,9 @@ public class DogDb {
     public static String DB_USERNAME = "root";
     public static String DB_PASSWORD = "";
 
-    private DogDb() throws SQLException {
+    public DogDb() throws SQLException {
 
-        String url = String.format("jdbc:%s://%s:%s/%s" , DB_DRIVER , DB_HOST , DB_PORT);
+        String url = String.format("jdbc:%s://%s:%s/%s" , DB_DRIVER , DB_HOST , DB_PORT , DB_NAME);
         conn = DriverManager.getConnection(url,DB_USERNAME,DB_PASSWORD);
     }
 
@@ -34,5 +34,14 @@ public class DogDb {
             dogs.add(dog);
         }
         return dogs;
+    }
+
+    public void createDog(Dog dog) throws SQLException {
+        String sql = "INSERT INTO dogs(name , age , breed) VALUES (?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1 , dog.getName());
+        stmt.setInt(2 , dog.getAge());
+        stmt.setString(3 , dog.getBreed());
+        stmt.execute();
     }
 }
